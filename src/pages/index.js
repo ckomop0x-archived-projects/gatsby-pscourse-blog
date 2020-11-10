@@ -3,7 +3,7 @@ import { graphql, Link } from "gatsby"
 import Layout from "../components/layout"
 import Title from "../components/title"
 
-export default function Home() {
+export default function Home({data}) {
   return (
     <Layout>
       <Title>Welcome</Title>
@@ -15,6 +15,37 @@ export default function Home() {
         laboriosam laborum modi molestiae pariatur provident quasi, quo unde ut. Culpa deleniti dolorem enim labore
         vitae?
       </p>
+
+      <div>
+        {data && data.allMarkdownRemark.edges.map(({node}) => (
+          <article>
+            <div>
+              <strong>{node.frontmatter.title}</strong>
+            </div>
+            <div>
+              {node.excerpt}
+            </div>
+            {/*{JSON.stringify(node)}*/}
+          </article>
+        ))}
+      </div>
     </Layout>
   )
 }
+
+export const query = graphql `query IndexPageQuery {
+  allMarkdownRemark {
+    totalCount
+    edges {
+      node {
+        id
+        frontmatter {
+          date(formatString: "MMM YYYY")
+          image
+          title
+        }
+        excerpt
+      }
+    }
+  }
+}`

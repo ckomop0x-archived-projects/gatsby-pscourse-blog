@@ -41,7 +41,7 @@ const SocialButton = props => {
 const Header = () => (
   <StaticQuery
     query={graphql`
-      query IndexPageQuery {
+      query HeaderQuery {
         site {
           siteMetadata {
             title

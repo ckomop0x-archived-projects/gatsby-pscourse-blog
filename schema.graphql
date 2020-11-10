@@ -290,6 +290,7 @@ type MarkdownRemark implements Node {
   children: [Node!]!
   excerpt(format: MarkdownExcerptFormats = PLAIN, pruneLength: Int = 140, truncate: Boolean = false): String
   excerptAst(pruneLength: Int = 140, truncate: Boolean = false): JSON
+  fields: MarkdownRemarkFields
   fileAbsolutePath: String
   frontmatter: MarkdownRemarkFrontmatter
   headings(depth: MarkdownHeadingLevels): [MarkdownHeading]
@@ -317,6 +318,10 @@ type MarkdownRemarkEdge {
   next: MarkdownRemark
   node: MarkdownRemark!
   previous: MarkdownRemark
+}
+
+type MarkdownRemarkFields {
+  slug: String
 }
 
 type MarkdownRemarkFrontmatter {
@@ -370,7 +375,7 @@ type Query {
   allSitePlugin(filter: SitePluginFilterInput, limit: Int, skip: Int, sort: SitePluginSortInput): SitePluginConnection!
   directory(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): Directory
   file(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, childMarkdownRemark: MarkdownRemarkFilterInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, publicURL: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): File
-  markdownRemark(children: NodeFilterListInput, excerpt: StringQueryOperatorInput, excerptAst: JSONQueryOperatorInput, fileAbsolutePath: StringQueryOperatorInput, frontmatter: MarkdownRemarkFrontmatterFilterInput, headings: MarkdownHeadingFilterListInput, html: StringQueryOperatorInput, htmlAst: JSONQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, rawMarkdownBody: StringQueryOperatorInput, tableOfContents: StringQueryOperatorInput, timeToRead: IntQueryOperatorInput, wordCount: MarkdownWordCountFilterInput): MarkdownRemark
+  markdownRemark(children: NodeFilterListInput, excerpt: StringQueryOperatorInput, excerptAst: JSONQueryOperatorInput, fields: MarkdownRemarkFieldsFilterInput, fileAbsolutePath: StringQueryOperatorInput, frontmatter: MarkdownRemarkFrontmatterFilterInput, headings: MarkdownHeadingFilterListInput, html: StringQueryOperatorInput, htmlAst: JSONQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, rawMarkdownBody: StringQueryOperatorInput, tableOfContents: StringQueryOperatorInput, timeToRead: IntQueryOperatorInput, wordCount: MarkdownWordCountFilterInput): MarkdownRemark
   site(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, host: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, pathPrefix: StringQueryOperatorInput, polyfill: BooleanQueryOperatorInput, port: IntQueryOperatorInput, siteMetadata: SiteSiteMetadataFilterInput): Site
   siteBuildMetadata(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput): SiteBuildMetadata
   sitePage(children: NodeFilterListInput, component: StringQueryOperatorInput, componentChunkName: StringQueryOperatorInput, componentPath: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, internalComponentName: StringQueryOperatorInput, isCreatedByStatefulCreatePages: BooleanQueryOperatorInput, matchPath: StringQueryOperatorInput, parent: NodeFilterInput, path: StringQueryOperatorInput, pluginCreator: SitePluginFilterInput, pluginCreatorId: StringQueryOperatorInput): SitePage
@@ -731,6 +736,7 @@ enum FileFieldsEnum {
   childMarkdownRemark___children___parent___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
   childMarkdownRemark___excerpt @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
   childMarkdownRemark___excerptAst @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+  childMarkdownRemark___fields___slug @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
   childMarkdownRemark___fileAbsolutePath @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
   childMarkdownRemark___frontmatter___date
   childMarkdownRemark___frontmatter___image
@@ -939,6 +945,7 @@ enum MarkdownRemarkFieldsEnum {
   children___parent___parent___id @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
   excerpt @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
   excerptAst @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
+  fields___slug @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
   fileAbsolutePath @deprecated(reason : "Sorting on fields that need arguments to resolve is deprecated.")
   frontmatter___date
   frontmatter___image
@@ -1628,10 +1635,15 @@ input MarkdownHeadingFilterListInput {
   elemMatch: MarkdownHeadingFilterInput
 }
 
+input MarkdownRemarkFieldsFilterInput {
+  slug: StringQueryOperatorInput
+}
+
 input MarkdownRemarkFilterInput {
   children: NodeFilterListInput
   excerpt: StringQueryOperatorInput
   excerptAst: JSONQueryOperatorInput
+  fields: MarkdownRemarkFieldsFilterInput
   fileAbsolutePath: StringQueryOperatorInput
   frontmatter: MarkdownRemarkFrontmatterFilterInput
   headings: MarkdownHeadingFilterListInput
